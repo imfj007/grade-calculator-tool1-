@@ -1,0 +1,45 @@
+
+import React, { useState, useEffect } from "react";
+import { GradeScale } from "@/entities/GradeScale";
+import GradeCalculator from "../components/calculator/GradeCalculator";
+import SettingsPanel from "../components/calculator/SettingsPanel";
+import QuickChart from "../components/calculator/QuickChart";
+import ExportButton from "../components/calculator/ExportButton";
+import SessionHistory from "../components/calculator/SessionHistory";
+
+const DEFAULT_GRADING_SCALES = [
+  {
+    name: "Standard Percentage",
+    type: "percentage",
+    scale: [{ min: 0, max: 100, grade: "percentage", color: "#3b82f6" }],
+    is_default: true
+  },
+  {
+    name: "Standard Letter (A-F)",
+    type: "letter",
+    scale: [
+      { min: 90, max: 100, grade: "A", color: "#22c55e" },
+      { min: 80, max: 89.99, grade: "B", color: "#84cc16" },
+      { min: 70, max: 79.99, grade: "C", color: "#f59e0b" },
+      { min: 60, max: 69.99, grade: "D", color: "#f97316" },
+      { min: 0, max: 59.99, grade: "F", color: "#dc2626" }
+    ]
+  },
+  {
+    name: "Points (100 Scale)",
+    type: "points",
+    scale: [{ min: 0, max: 100, grade: "points", color: "#8b5cf6" }]
+  }
+];
+
+export default function Calculator() {
+  const [showDecimals, setShowDecimals] = useState(false);
+  const [showChart, setShowChart] = useState(true);
+  const [gradingScales, setGradingScales] = useState(DEFAULT_GRADING_SCALES);
+  const [currentGradingScale, setCurrentGradingScale] = useState(DEFAULT_GRADING_SCALES[0]);
+  const [currentGrade, setCurrentGrade] = useState(null);
+  const [sessionHistory, setSessionHistory] = useState([]);
+
+  useEffect(() => {
+    loadGradingScales();
+  }, []);
