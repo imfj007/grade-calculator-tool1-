@@ -1,0 +1,45 @@
+import React from "react";
+import { motion } from "framer-motion";
+import { CheckCircle, Award, Target } from "lucide-react";
+
+const getFeedback = (percentage) => {
+  if (percentage >= 90) {
+    return {
+      message: "Excellent!",
+      icon: <Award className="w-5 h-5" />,
+      className: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800"
+    };
+  }
+  if (percentage >= 70) {
+    return {
+      message: "Good job, keep practicing!",
+      icon: <CheckCircle className="w-5 h-5" />,
+      className: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border-amber-200 dark:border-amber-800"
+    };
+  }
+  if (percentage < 70 && percentage >= 0) {
+    return {
+      message: "Review material and try again.",
+      icon: <Target className="w-5 h-5" />,
+      className: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800"
+    };
+  }
+  return null;
+};
+
+export default function FeedbackMessage({ percentage }) {
+  const feedback = getFeedback(percentage);
+
+  if (!feedback) return null;
+
+  return (
+    <motion.div
+      key={feedback.message}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+      className={`mt-6 p-3 rounded-lg flex items-center justify-center gap-2 text-sm font-medium border ${feedback.className}`}
+    >
+      {feedback.icon}
+      {feedback.message}
