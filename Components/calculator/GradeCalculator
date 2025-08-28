@@ -1,0 +1,45 @@
+
+import React, { useState, useEffect, useCallback } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import FeedbackMessage from "./FeedbackMessage";
+import { RotateCcw, Plus, Minus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function GradeCalculator({ 
+  showDecimals, 
+  gradingScale, 
+  onGradeChange,
+  onResetCalculation,
+}) {
+  const [totalQuestions, setTotalQuestions] = useState(20);
+  const [wrongAnswers, setWrongAnswers] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const correctAnswers = Math.max(0, totalQuestions - wrongAnswers);
+  const percentage = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
+  const displayPercentage = showDecimals 
+    ? percentage.toFixed(2) 
+    : Math.round(percentage);
+
+  const getGradeColor = useCallback((perc) => {
+    if (perc >= 85) return 'grade-excellent'; // These will likely be mapped to new blue/sky colors in CSS or theme
+    if (perc >= 70) return 'grade-good';
+    return 'grade-needs-improvement';
+  }, []);
+
+  const getLetterGrade = useCallback((perc) => {
+    if (gradingScale.type !== 'letter') return null;
+    const grade = gradingScale.scale.find(s => perc >= s.min && perc <= s.max);
+    return grade ? grade.grade : 'F';
+  }, [gradingScale]);
+
+  const addWrongAnswer = useCallback((amount) => {
+    setWrongAnswers(prev => Math.min(totalQuestions, Math.max(0, prev + amount)));
+    setIsAnimating(true);
+    setTimeout(() => setIsAnimating(false), 200);
+  }, [totalQuestions]);
+
+  const reset = useCallback(() => {
