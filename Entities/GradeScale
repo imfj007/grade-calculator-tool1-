@@ -1,0 +1,45 @@
+{
+  "name": "GradeScale",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the grading scale"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "percentage",
+        "letter",
+        "points"
+      ],
+      "description": "Type of grading scale"
+    },
+    "scale": {
+      "type": "array",
+      "description": "Grading scale configuration",
+      "items": {
+        "type": "object",
+        "properties": {
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          },
+          "grade": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
